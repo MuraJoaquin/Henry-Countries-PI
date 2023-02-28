@@ -5,7 +5,7 @@ const Landing = () => {
         <div className={style.landingpage}>
             <h1 className={style.titulo}>Lets go in! Discover the World!</h1>
             <Link to={"/home"}>
-                <button className={style.button}>Ingresar</button>
+                <button className={style.button}>Start now</button>
             </Link>
         </div>
     )

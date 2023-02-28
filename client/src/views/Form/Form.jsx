@@ -86,6 +86,9 @@ const Form = () => {
 
     return(
         <>
+        <br></br>
+            <p className={style.label}>CREATE THE ACTIVITY!</p>
+            <br></br>
             <form className={style.form} onSubmit={submitHandler}>
                 <div>
                     <label className={style.label} htmlFor="name">Choose a name: </label>
