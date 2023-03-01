@@ -62,8 +62,8 @@ const Home = () => {
                 }
                 <select className={style.select} name="ordering" onChange={changeFilterHandler}>
                     <option value="rand">random</option>
-                    <option value="asc">ascendente</option>
-                    <option value="desc">descendente</option>
+                    <option value="asc">ascending</option>
+                    <option value="desc">descending</option>
                 </select>
                 <select className={style.select} name="population" onChange={changeFilterHandler}>
                     <option value="">---</option>
