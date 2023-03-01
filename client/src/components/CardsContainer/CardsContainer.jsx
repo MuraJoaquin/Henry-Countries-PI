@@ -47,7 +47,7 @@ const CardsContainer = () => {
                                         continent={country.continent}
                                     />
                                 }):
-                                <p>No hay resultados</p>
+                                <p>No results</p>
                             }
                         </div>
                         <div>

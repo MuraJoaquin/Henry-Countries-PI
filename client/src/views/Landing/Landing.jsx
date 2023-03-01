@@ -3,7 +3,7 @@ import style from "./Landing.module.css"
 const Landing = () => {
     return(
         <div className={style.landingpage}>
-            <h1 className={style.titulo}>Lets go in! Discover the World!</h1>
+            <h1 className={style.titulo}>Let's go in! Discover the World!</h1>
             <Link to={"/home"}>
                 <button className={style.button}>Start now</button>
             </Link>

@@ -4,6 +4,7 @@ export const GET_COUNTRY = 'GET_COUNTRY'
 export const FILTERED_BY_NAME = 'FILTERED_BY_NAME'
 export const GET_ACTIVITIES = 'GET_ACTIVITIES'
 export const FILTER_BY_ACTIVITY_AND_CONTINENT = 'FILTER_BY_ACTIVITY_AND_CONTINENT'
+export const ORDER_ASC = 'ORDER_ASC'
 
 export const getCountries =  () => {
     return async function(dispatch){
@@ -40,3 +41,4 @@ export const getActivities = () => {
 export const filters = (value) => {
     return {type:FILTER_BY_ACTIVITY_AND_CONTINENT,payload:value}
 }
+

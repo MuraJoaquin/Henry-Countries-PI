@@ -4,12 +4,14 @@
     justify-content: space-around;
     background-color: #F6F9FC;
     padding: 10px;
+
   } 
   
-  .mainContainer p {
+  .mainContainer a {
     font-size: 20px;
     font-weight: bold;
     color: #4A4A4A;
     text-decoration: none;
     cursor: pointer;
+    text-decoration: none;
   }

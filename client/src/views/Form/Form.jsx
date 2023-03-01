@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { getCountries } from "../../redux/actions"
+import { getCountries,orderAsc } from "../../redux/actions"
 import axios from "axios"
 import style from './Form.module.css'
 
@@ -8,16 +8,14 @@ import style from './Form.module.css'
 const Form = () => {
     const dispatch = useDispatch()
     
-    useEffect(() =>{
-        dispatch(getCountries())
-    },[dispatch])
-
     const countries = useSelector(state => state.countries)
+    const [countriesArrayCopy, setCountriesArrayCopy] = useState([])
+    const [countriesSelected, setCountriesSelected] = useState([])
 
     const [form,setForm] = useState({
         name: "",
         difficulty: "",
-        duration: "",
+        duration: "00:00:00",
         season: "",
         countriesId: []
     })
@@ -29,6 +27,7 @@ const Form = () => {
         countriesId: "Choose minimum one country"
     })
     
+
     const changeHandler = (e) => {
         setErrors(validate({...form,[e.target.name]:e.target.value}))
         setForm({
@@ -38,13 +37,36 @@ const Form = () => {
     }
 
     const changeHandlerArray = (e) => {
-        setErrors(validate({...form,[e.target.name]: [...form[e.target.name], e.target.value]}))
+        if(e.target.value !== ""){
+            setErrors(validate({...form,[e.target.name]: [...form[e.target.name], e.target.value]}))
+            setForm({
+                ...form,
+                [e.target.name]: [...form[e.target.name], e.target.value]
+                })
+            const currentCountrySelected = countriesArrayCopy.find(c => c.id === e.target.value)
+            setCountriesArrayCopy(countriesArrayCopy.filter(c => c.id !== e.target.value))
+            setCountriesSelected([...countriesSelected, currentCountrySelected])
+        }
+        
+        
+        // crear un estado local donde me guardo los paises y al eliminar el pais que se eligio del array que mapeo, que me viene por e.target.value y guardarlo en otro estado local
+        // donde voy guardando todos los paises seleccionados
+        // que se muestre el pais que se eligio debajo como un span, podria crea una constante array que me vaya guardando los paises que se clickearon.
+        // Y a cada span asignarle un boton que en su onClick me pushee de nuevo el pais al array que mapeo y que me lo elimine del array donde voy guardando los paises clickeados
+    }
+
+    const removeToArray = (e) => {
+        e.preventDefault()
+        const countryRemoved = countriesSelected.find(c => c.id === e.target.value)
+        setCountriesSelected(countriesSelected.filter(c => c.id !== e.target.value))
+        setCountriesArrayCopy([...countriesArrayCopy,countryRemoved])
+        const idOfCountriesSelected = []
+        countriesSelected.map(c => idOfCountriesSelected.push(c.id))
         setForm({
             ...form,
-            [e.target.name]: [...form[e.target.name], e.target.value]
+            countriesId: [...form.countriesId.filter(c => c !== e.target.value)]
         })
     }
-    
     const submitHandler = async (e) => {
         e.preventDefault()
         await axios.post('http://localhost:3001/activities',form)
@@ -71,6 +93,19 @@ const Form = () => {
         return errors
     }
     
+    useEffect(() =>{
+        dispatch(getCountries())
+    },[dispatch])
+    useEffect(() => {
+        countries.sort(function (a,b){
+            if(a.name > b.name) return 1
+            if(b.name > a.name) return -1
+            return 0 
+        })
+        setCountriesArrayCopy(countries)
+    },[countries])
+
+
     // const validate = (form) => {
     //     // validate name\
     //     if( (/^[A-Za-z]+$/).test(form.name)){
@@ -83,13 +118,12 @@ const Form = () => {
     //     if(form.season) setErrors({...errors, season: ""})
 
     // }
-
     return(
         <>
         <br></br>
             <p className={style.label}>CREATE THE ACTIVITY!</p>
             <br></br>
-            <form className={style.form} onSubmit={submitHandler}>
+            <form className={style.form} onSubmit={(e) => submitHandler(e)}>
                 <div>
                     <label className={style.label} htmlFor="name">Choose a name: </label>
                     <input className={style.inputText} type="text" id="name" name="name" value={form.name} onChange={changeHandler}></input>
@@ -117,7 +151,7 @@ const Form = () => {
                 <br></br>
                     <p className={style.label}>Choose the activity duration</p>
                     <select className={style.select} name="duration" onChange={changeHandler}> 
-                        <option value="">--⌚-</option> 
+                        <option value="00:00">--⌚-</option> 
                         <option value="01:00">01:00hs</option>
                         <option value="02:00">02:00hs</option>
                         <option value="03:00">03:00hs</option>
@@ -166,24 +200,32 @@ const Form = () => {
                     <select className={style.select} name="countriesId" onChange={changeHandlerArray}>
                         <option value="">---</option>
                         {
-                            countries.map(c => {
+                            countriesArrayCopy?.map((c,i) => {
                                 return (
-                                    <option key={c.id} value={c.id}>{c.name}</option>
+                                    <option key={i} value={c.id}>{c.name}</option>
                                 )
                             })
                         }
                     </select>
                 </div>
+                {countriesSelected && <p>Selected countries:</p>}
+                <div className={style.divImg}>
+                {
+                            countriesSelected?.map((c,i)=> {
+                                return (
+                                    <div key={i}><img className={style.img} src={c.flag}></img> <button value={c.id} onClick={(e) => removeToArray(e)}>X</button></div>
+                                )
+                            })
+                        }
+                </div>
                 {errors.countriesId && <span className={style.error}>{errors.countriesId}</span>}
                 <br></br>
-                <br></br>
-                <button className={style.buttonSubmit} type="submit" disabled={errors.name || errors.difficulty || errors.season || errors.countriesId ? true : false}>SUBMIT</button>
-
+                <br></br> 
+                <button className={style.buttonSubmit} type="submit" disabled={errors.name || errors.difficulty || errors.season || errors.countriesId || !countriesSelected.length ? true : false}>SUBMIT</button> 
 
             </form>
 
         </>
     )
 }
-
 export default Form

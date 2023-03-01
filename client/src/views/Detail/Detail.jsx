@@ -23,13 +23,13 @@ const Detail = () => {
         SetIsLoading(false)
     }, [country])
     return (
-        <div>
+        <div className={style.mainContainer}>
             {
                 isLoading ? <p>Loading...</p> :
-                    <div>                    
+                    <div className={style.divContainer}>                    
                             <p>ID: {country.id}</p>                      
                             <p>NAME: {country.name}</p>                      
-                            <img src={country.flag} alt=''></img>                                              
+                            <img className={style.img} src={country.flag} alt=''></img>                                              
                             <p>CONTINENT: {country.continent}</p>                      
                             <p>CAPITAL: {country.capital}</p>                                               
                             {country.subregion && <p>SUBREGION: {country.subregion}</p>}                      

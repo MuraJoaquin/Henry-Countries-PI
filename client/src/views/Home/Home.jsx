@@ -20,16 +20,14 @@ const Home = () => {
             ...filtros,
             [e.target.name]: e.target.value
         })
-        console.log({ ...filtros, [e.target.name]: e.target.value });
-        // e.target.name === 'ordering' && setOrder(`Ordered ${e.target.value}`)
         dispatch(filters({ ...filtros, [e.target.name]: e.target.value }))
     }
 
-    // const [order, setOrder] = useState('')
     const [filtros, setFiltros] = useState({
         continent: "All",
         activity: "",
-        ordering: "rand"
+        ordering: "rand",
+        population : ""
     })
     const activities = useSelector(state => state.activities)
     const contintents = ["All", "Europe", "North America", "South America", "Africa", "Asia", "Oceania"]
@@ -66,7 +64,11 @@ const Home = () => {
                     <option value="rand">random</option>
                     <option value="asc">ascendente</option>
                     <option value="desc">descendente</option>
-                    <option value="population">por poblacion</option>
+                </select>
+                <select className={style.select} name="population" onChange={changeFilterHandler}>
+                    <option value="">---</option>
+                    <option value="pop_asc">population ↑</option>
+                    <option value="pop_desc">population ↓</option>
                 </select>
             </div>
             <CardsContainer />

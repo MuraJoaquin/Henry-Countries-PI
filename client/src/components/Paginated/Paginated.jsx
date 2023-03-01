@@ -7,21 +7,32 @@ const Paginated = ({countries,countriesPerPage,paginated}) => {
     for(let i = 1; i <= Math.ceil(countries/countriesPerPage); i++){  // aca se me guarda cuantas paginaciones va a tener mi paginado. En este caso son 250 paises/ 10 = 25 paginas
         pageNumber.push(i)
     }
+
+    const scroll = () => {
+        window.scroll({
+            top: 100,
+            behavior: 'smooth'
+          })
+    }
+    
     const [current,setCurrent] = useState(1)
     const clickHandlerNext = () => {
-        setCurrent(current+1)
+        setCurrent(current + 1)
         paginated(current + 1)
+        scroll()
     }
 
     const clickHandlerPrevious = () =>{
         setCurrent(current - 1)
         paginated(current - 1)
+        scroll()
     }
 
     const clickHandlerLast = () => {
         const lastCountry = pageNumber.length - 0
         setCurrent(lastCountry)
         paginated(lastCountry)
+        scroll()
     }
 
     useEffect(() => {
@@ -29,34 +40,24 @@ const Paginated = ({countries,countriesPerPage,paginated}) => {
         countries && paginated(1)
     },[countries])
 
+
     return(
         <>
         <div className={style.pagination}>
             {
-                current > 1 && <a onClick={clickHandlerPrevious}> <button>Previous</button></a>
+                current > 1 && <button onClick={clickHandlerPrevious}>Previous</button>
             }
             {
                 pageNumber.length && <a className={style.pageNumbers}>{current} de {pageNumber.length}</a>
             }
             {
-                current < pageNumber.length && <a onClick={clickHandlerNext}> <button>Next</button></a>
+                current < pageNumber.length && <button onClick={clickHandlerNext}>Next</button>
             }
             {
-                pageNumber.length > 2 && current < pageNumber.length - 1 && <a onClick={clickHandlerLast}> <button>Last</button></a>
+                pageNumber.length > 2 && current < pageNumber.length - 1 && <button onClick={clickHandlerLast}>Last</button>
             }
         </div>
         </>
-
-
-        // <div>
-        //     <ul className={style.paginated}>
-        //         {pageNumber && pageNumber.map(number => (
-        //             <li key={number}>
-        //                 <a onClick={() => paginated(number)}>{number}</a> 
-        //             </li> //por cada numerito adentro del array, me crea una pagina
-        //         ))}
-        //     </ul>
-        // </div>
     )
 }
 export default Paginated
