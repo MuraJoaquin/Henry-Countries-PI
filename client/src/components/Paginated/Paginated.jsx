@@ -48,7 +48,7 @@ const Paginated = ({countries,countriesPerPage,paginated}) => {
                 current > 1 && <button onClick={clickHandlerPrevious}>Previous</button>
             }
             {
-                pageNumber.length && <a className={style.pageNumbers}>{current} de {pageNumber.length}</a>
+                pageNumber.length && <a className={style.pageNumbers}>{current} of {pageNumber.length}</a>
             }
             {
                 current < pageNumber.length && <button onClick={clickHandlerNext}>Next</button>

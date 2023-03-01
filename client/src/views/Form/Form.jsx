@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { getCountries,orderAsc } from "../../redux/actions"
+import { getCountries } from "../../redux/actions"
 import axios from "axios"
 import style from './Form.module.css'
 
@@ -27,7 +27,6 @@ const Form = () => {
         countriesId: "Choose minimum one country"
     })
     
-
     const changeHandler = (e) => {
         setErrors(validate({...form,[e.target.name]:e.target.value}))
         setForm({
@@ -55,25 +54,6 @@ const Form = () => {
         // Y a cada span asignarle un boton que en su onClick me pushee de nuevo el pais al array que mapeo y que me lo elimine del array donde voy guardando los paises clickeados
     }
 
-    const removeToArray = (e) => {
-        e.preventDefault()
-        const countryRemoved = countriesSelected.find(c => c.id === e.target.value)
-        setCountriesSelected(countriesSelected.filter(c => c.id !== e.target.value))
-        setCountriesArrayCopy([...countriesArrayCopy,countryRemoved])
-        const idOfCountriesSelected = []
-        countriesSelected.map(c => idOfCountriesSelected.push(c.id))
-        setForm({
-            ...form,
-            countriesId: [...form.countriesId.filter(c => c !== e.target.value)]
-        })
-    }
-    const submitHandler = async (e) => {
-        e.preventDefault()
-        await axios.post('http://localhost:3001/activities',form)
-        .then(res => alert('ACTIVITY CREATED SUCCESSFULLY'))
-        .catch(err => alert(err))
-    }
-
     function validate (form) {
         let errors = {}
         if( (/^[A-Za-z]+$/).test(form.name)) errors.name = ""
@@ -92,10 +72,28 @@ const Form = () => {
 
         return errors
     }
+
+    const removeToArray = (e) => {
+        e.preventDefault()
+        const countryRemoved = countriesSelected.find(c => c.id === e.target.value)
+        setCountriesSelected(countriesSelected.filter(c => c.id !== e.target.value))
+        setCountriesArrayCopy([...countriesArrayCopy,countryRemoved])
+        setForm({
+            ...form,
+            countriesId: [...form.countriesId.filter(c => c !== e.target.value)]
+        })
+    }
+    const submitHandler = async (e) => {
+        e.preventDefault()
+        await axios.post('http://localhost:3001/activities',form)
+        .then(res => alert('ACTIVITY CREATED SUCCESSFULLY'))
+        .catch(err => alert(`The activty with name ${form.name} had been created before, Please try with other activity name`))
+    }
     
     useEffect(() =>{
         dispatch(getCountries())
     },[dispatch])
+
     useEffect(() => {
         countries.sort(function (a,b){
             if(a.name > b.name) return 1

@@ -38,7 +38,7 @@ export const getActivities = () => {
     }
 }
 
-export const filters = (value) => {
+export const allFilters = (value) => {
     return {type:FILTER_BY_ACTIVITY_AND_CONTINENT,payload:value}
 }
 

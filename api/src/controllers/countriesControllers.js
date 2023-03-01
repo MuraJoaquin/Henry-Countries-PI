@@ -26,7 +26,7 @@ const saveApiDataInDb = async () => {
 const getApiCountries = async () => {
     const countries = await Country.findAll({
         include :{
-            model: Activity, // nose pq se cambia el orden de los paises
+            model: Activity, 
             through: {
                 attributes: []
             }
